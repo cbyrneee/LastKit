@@ -23,10 +23,23 @@ class APIService {
         signed: Bool = false
     ) async throws -> T {
         let url = try makeRequestURL(method: method, parameters: parameters, signed: signed)
-        let (data, _) = try await session.data(from: url)
+        let (data, response) = try await session.data(from: url)
+        
+        guard let response = response as? HTTPURLResponse else {
+            throw APIServiceError.unknown
+        }
         
         let decoder = JSONDecoder()
-        return try decoder.decode(T.self, from: data)
+        
+        switch response.statusCode {
+        case 200..<300:
+            return try decoder.decode(T.self, from: data)
+        case 400..<500:
+            let error = try decoder.decode(LastFMError.self, from: data)
+            throw LastKitError.apiError(error.code, error.message)
+        default:
+            throw APIServiceError.unknown
+        }
     }
     
     private func makeRequestURL(

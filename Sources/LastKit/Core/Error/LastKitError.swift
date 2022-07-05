@@ -9,4 +9,5 @@ import Foundation
 
 public enum LastKitError : Error {
     case notAuthenticated
+    case apiError(Int, String)
 }

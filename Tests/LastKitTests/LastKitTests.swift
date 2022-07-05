@@ -7,5 +7,6 @@ final class LastKitTests: XCTestCase {
         let lastFM = LastFM(credentials: credentials)
         
         try await lastFM.authenticate(method: .web("token"))
+        print(try await lastFM.getAuthenticatedUser())
     }
 }

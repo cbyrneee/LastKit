@@ -24,7 +24,6 @@ class APIService {
     ) async throws -> T {
         let url = try makeRequestURL(method: method, parameters: parameters, signed: signed)
         let (data, _) = try await session.data(from: url)
-        print(String(data: data, encoding: .utf8)!)
         
         let decoder = JSONDecoder()
         return try decoder.decode(T.self, from: data)

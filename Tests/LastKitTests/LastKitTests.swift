@@ -3,10 +3,8 @@ import XCTest
 
 final class LastKitTests: XCTestCase {
     func testAuthentication() async throws {
-        let lastFM = LastFM(
-            apiKey: "key",
-            apiSecret: "secret"
-        )
+        let credentials = APICredentials(key: "", secret: "")
+        let lastFM = LastFM(credentials: credentials)
         
         try await lastFM.authenticate(method: .web("token"))
     }

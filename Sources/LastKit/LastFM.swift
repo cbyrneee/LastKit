@@ -8,24 +8,21 @@
 import Foundation
 
 public final class LastFM {
-    private let credentials: APICredentials
+    private let apiCredentials: APICredentials
     private let authenticationService: AuthenticationService
     
-    init(credentials: APICredentials) {
-        self.credentials = credentials
-        self.authenticationService = AuthenticationService(credentials: credentials)
-    }
+    private var userCredentials: UserCredentials? = nil
     
-    init(apiKey: String, apiSecret: String) {
-        self.credentials = APICredentials(key: apiKey, secret: apiSecret)
-        self.authenticationService = AuthenticationService(credentials: self.credentials)
+    init(credentials: APICredentials) {
+        self.apiCredentials = credentials
+        self.authenticationService = AuthenticationService(credentials: credentials)
     }
     
     func authenticate(method: AuthenticationMethod) async throws {
         switch method {
         case .web(let token):
             let response = try await self.authenticationService.getSession(token: token)
-            print(response)
+            self.userCredentials = response.session
         }
     }
 }
